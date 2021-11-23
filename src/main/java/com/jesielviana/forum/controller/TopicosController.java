@@ -1,5 +1,6 @@
 package com.jesielviana.forum.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import com.jesielviana.forum.controller.dto.TopicoDto;
@@ -9,11 +10,13 @@ import com.jesielviana.forum.repository.CursoRepository;
 import com.jesielviana.forum.repository.TopicoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/topicos")
@@ -36,10 +39,12 @@ public class TopicosController {
   }
 
   @PostMapping
-  public void cadastra(@RequestBody TopicoForm form) {
+  public ResponseEntity<TopicoDto> cadastra(@RequestBody TopicoForm form, UriComponentsBuilder uriBuilder) {
     System.out.println(form.getNomeCurso());
     Topico topico = form.converte(cursoRepository);
     topicoRepository.save(topico);
+    URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
+    return ResponseEntity.created(uri).body(new TopicoDto(topico));
   }
 
 }
