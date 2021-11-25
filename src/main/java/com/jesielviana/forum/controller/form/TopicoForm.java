@@ -1,13 +1,26 @@
 package com.jesielviana.forum.controller.form;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 import com.jesielviana.forum.modelo.Curso;
 import com.jesielviana.forum.modelo.Topico;
 import com.jesielviana.forum.repository.CursoRepository;
 
+import org.hibernate.validator.constraints.Length;
+
 public class TopicoForm {
 
+  @NotNull
+  @NotEmpty
+  @Length(min = 5, max = 50)
   private String titulo;
+  @NotNull
+  @NotEmpty
+  @Length(min = 10, max = 255)
   private String mensagem;
+  @NotNull
+  @NotEmpty
   private String nomeCurso;
 
   public Topico converte(CursoRepository cursoRepository) {

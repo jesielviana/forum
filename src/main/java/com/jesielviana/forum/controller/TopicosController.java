@@ -3,6 +3,8 @@ package com.jesielviana.forum.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.jesielviana.forum.controller.dto.TopicoDto;
 import com.jesielviana.forum.controller.form.TopicoForm;
 import com.jesielviana.forum.modelo.Topico;
@@ -39,8 +41,7 @@ public class TopicosController {
   }
 
   @PostMapping
-  public ResponseEntity<TopicoDto> cadastra(@RequestBody TopicoForm form, UriComponentsBuilder uriBuilder) {
-    System.out.println(form.getNomeCurso());
+  public ResponseEntity<TopicoDto> cadastra(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
     Topico topico = form.converte(cursoRepository);
     topicoRepository.save(topico);
     URI uri = uriBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
