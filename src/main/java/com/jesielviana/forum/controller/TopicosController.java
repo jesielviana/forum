@@ -2,10 +2,13 @@ package com.jesielviana.forum.controller;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import com.jesielviana.forum.controller.dto.TopicoDto;
+import com.jesielviana.forum.controller.form.AtualizacaoTopicoForm;
 import com.jesielviana.forum.controller.form.TopicoForm;
 import com.jesielviana.forum.modelo.Topico;
 import com.jesielviana.forum.repository.CursoRepository;
@@ -13,9 +16,11 @@ import com.jesielviana.forum.repository.TopicoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +47,7 @@ public class TopicosController {
   }
 
   @PostMapping
+  @Transactional
   public ResponseEntity<TopicoDto> cadastra(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
     Topico topico = form.converte(cursoRepository);
     topicoRepository.save(topico);
@@ -50,8 +56,26 @@ public class TopicosController {
   }
 
   @GetMapping("/{id}")
-  public TopicoDto detalha(@PathVariable long id) {
-    Topico topico = topicoRepository.getById(id);
-    return new TopicoDto(topico);
+  public ResponseEntity<TopicoDto> detalha(@PathVariable long id) {
+    Optional<Topico> optional = topicoRepository.findById(id);
+    if (optional.isPresent()) {
+      return ResponseEntity.ok(new TopicoDto(optional.get()));
+    }
+    return ResponseEntity.notFound().build();
+  }
+
+  @PutMapping("/{id}")
+  @Transactional
+  public ResponseEntity<TopicoDto> atualiza(@PathVariable long id,
+      @RequestBody @Valid AtualizacaoTopicoForm form) {
+    Topico topico = form.atualiza(id, topicoRepository);
+    return ResponseEntity.ok(new TopicoDto(topico));
+  }
+
+  @DeleteMapping("/{id}")
+  @Transactional
+  public ResponseEntity<?> remove(@PathVariable long id) {
+    topicoRepository.deleteById(id);
+    return ResponseEntity.ok().build();
   }
 }
