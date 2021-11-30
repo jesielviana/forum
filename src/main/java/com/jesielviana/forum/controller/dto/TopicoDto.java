@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import com.jesielviana.forum.modelo.Topico;
 
+import org.springframework.data.domain.Page;
+
 public class TopicoDto {
 
   private Long id;
@@ -23,8 +25,8 @@ public class TopicoDto {
 
   }
 
-  public static List<TopicoDto> converteDe(List<Topico> topicos) {
-    return topicos.stream().map(TopicoDto::new).collect(Collectors.toList());
+  public static Page<TopicoDto> converteDe(Page<Topico> topicos) {
+    return topicos.map(TopicoDto::new);
   }
 
   public Long getId() {
