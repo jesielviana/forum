@@ -15,6 +15,8 @@ import com.jesielviana.forum.repository.CursoRepository;
 import com.jesielviana.forum.repository.TopicoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +44,7 @@ public class TopicosController {
   private CursoRepository cursoRepository;
 
   @GetMapping
+  @Cacheable(value = "listaDeTopicos")
   public Page<TopicoDto> lista(@RequestParam(required = false) String nomeCurso,
       @PageableDefault(sort = "dataCriacao", direction = Direction.DESC) Pageable paginacao) {
     if (nomeCurso == null) {
@@ -55,6 +58,7 @@ public class TopicosController {
 
   @PostMapping
   @Transactional
+  @CacheEvict(value = "listaDeTopicos", allEntries = true)
   public ResponseEntity<TopicoDto> cadastra(@RequestBody @Valid TopicoForm form, UriComponentsBuilder uriBuilder) {
     Topico topico = form.converte(cursoRepository);
     topicoRepository.save(topico);
@@ -81,6 +85,7 @@ public class TopicosController {
 
   @DeleteMapping("/{id}")
   @Transactional
+  @CacheEvict(value = "listaDeTopicos", allEntries = true)
   public ResponseEntity<?> remove(@PathVariable long id) {
     topicoRepository.deleteById(id);
     return ResponseEntity.ok().build();
