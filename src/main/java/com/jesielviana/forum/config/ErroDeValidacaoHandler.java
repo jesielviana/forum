@@ -1,4 +1,4 @@
-package com.jesielviana.forum.controller.config;
+package com.jesielviana.forum.config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class ErroDeValidacaoHandler {
   public List<ErroFormDto> handle(MethodArgumentNotValidException exception) {
     List<ErroFormDto> erros = new ArrayList<>();
     List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
-    
+
     fieldErrors.forEach(e -> {
       String mensagem = messageSource.getMessage(e, LocaleContextHolder.getLocale());
       ErroFormDto erro = new ErroFormDto(e.getField(), mensagem);

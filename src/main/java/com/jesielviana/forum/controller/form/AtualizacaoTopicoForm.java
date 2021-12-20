@@ -3,9 +3,7 @@ package com.jesielviana.forum.controller.form;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.jesielviana.forum.modelo.Curso;
 import com.jesielviana.forum.modelo.Topico;
-import com.jesielviana.forum.repository.CursoRepository;
 import com.jesielviana.forum.repository.TopicoRepository;
 
 import org.hibernate.validator.constraints.Length;

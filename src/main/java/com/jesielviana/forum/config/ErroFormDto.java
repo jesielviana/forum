@@ -1,4 +1,4 @@
-package com.jesielviana.forum.controller.config;
+package com.jesielviana.forum.config;
 
 public class ErroFormDto {
 
